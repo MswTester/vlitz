@@ -5,7 +5,7 @@ pub fn lengthed(s: &str, size: usize) -> String {
     // Strip ANSI color codes for length calculation
     let stripped = strip_ansi_escapes::strip(s);
     let stripped_str = String::from_utf8_lossy(&stripped);
-    
+
     let len = stripped_str.graphemes(true).count();
     if len == size {
         s.to_string()
@@ -13,7 +13,7 @@ pub fn lengthed(s: &str, size: usize) -> String {
         let mut result = String::new();
         let mut current_len = 0;
         let ellipsis = "…";
-        
+
         // Rebuild the string with color codes but proper length
         for c in s.chars() {
             if current_len >= size - 1 {
@@ -25,7 +25,9 @@ pub fn lengthed(s: &str, size: usize) -> String {
                 // Skip ANSI escape sequence
                 while let Some(next) = s.chars().nth(result.len()) {
                     result.push(next);
-                    if next == 'm' { break; }
+                    if next == 'm' {
+                        break;
+                    }
                 }
             } else {
                 current_len += 1;
@@ -44,7 +46,7 @@ pub fn fill(length: usize) -> String {
 pub fn highlight(s: &str, filter: &str) -> String {
     let mut highlighted = String::new();
     let mut start = 0;
-    
+
     while let Some(pos) = s.to_lowercase()[start..].find(&filter.to_lowercase()) {
         let mut end = 0;
         end = start + pos;
@@ -55,4 +57,8 @@ pub fn highlight(s: &str, filter: &str) -> String {
     highlighted.push_str(&s[start..]);
 
     highlighted
+}
+
+pub fn log_error(msg: &str) {
+    eprintln!("{}", msg.red());
 }
